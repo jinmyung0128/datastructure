@@ -23,9 +23,42 @@ const TYPE_TAG_CLASS = {
   green: "type-tag--grass",
 };
 
+const INSTANCE_INFO = {
+  Pikachu: { koreanName: "피카츄", image: "images/pikachu.png" },
+  Charmander: { koreanName: "파이리", image: "images/charmander.webp" },
+  Squirtle: { koreanName: "꼬부기", image: "images/squirtle.webp" },
+  Bulbasaur: { koreanName: "이상해씨", image: "images/bulbasaur.webp" },
+};
+
 let selectedId = null;
 let logEntries = [];
 let demoRunning = false;
+let pokemonPopupTimer = null;
+
+function showPokemonImagePopup(imageSrc, altText) {
+  let overlay = document.getElementById("pokemon-image-popup");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "pokemon-image-popup";
+    overlay.className = "pokemon-image-popup";
+    overlay.innerHTML = '<img alt="" />';
+    document.body.appendChild(overlay);
+  }
+
+  const img = overlay.querySelector("img");
+  img.src = imageSrc;
+  img.alt = altText;
+
+  overlay.classList.add("is-visible");
+
+  if (pokemonPopupTimer) {
+    clearTimeout(pokemonPopupTimer);
+  }
+  pokemonPopupTimer = setTimeout(() => {
+    overlay.classList.remove("is-visible");
+    pokemonPopupTimer = null;
+  }, 500);
+}
 
 function getEntry(id) {
   return POKEMON_REGISTRY[id];
@@ -55,6 +88,10 @@ function renderDiagram() {
       const meta = getMeta(node.id);
       const themeClass = CARD_THEME[meta.color] || "class-card--adt";
       const isSelected = selectedId === node.id;
+      const instanceInfo = INSTANCE_INFO[node.id];
+      const koreanLabel = instanceInfo
+        ? `<span class="card-korean-name"> (${instanceInfo.koreanName})</span>`
+        : "";
 
       const card = document.createElement("button");
       card.type = "button";
@@ -72,7 +109,7 @@ function renderDiagram() {
         <span class="badge">${meta.badge}</span>
         <div class="card-title-row">
           <span class="emoji">${meta.emoji || "◆"}</span>
-          <h3>${meta.label}</h3>
+          <h3>${meta.label}${koreanLabel}</h3>
         </div>
         <p class="desc">${meta.description}</p>
         <span class="hint">클릭 → attack()</span>
@@ -124,6 +161,10 @@ function handleNodeClick(id) {
 
   let battleResult = null;
   if (meta.kind === "instance") {
+    const instanceInfo = INSTANCE_INFO[id];
+    if (instanceInfo) {
+      showPokemonImagePopup(instanceInfo.image, instanceInfo.koreanName);
+    }
     battleResult = resolveBattle(config.attackType, result);
     renderMonsterPanel();
   }
@@ -139,6 +180,7 @@ function handleNodeClick(id) {
       : result.success
         ? "attack"
         : "fail",
+    pokemonId: INSTANCE_INFO[id] ? id : undefined,
     title: `${meta.label}.attack("${config.attackType}", ${config.damage})`,
     message: battleResult ? battleResult.message : result.message,
     damage: battleResult ? battleResult.damageDealt : result.damage,
@@ -269,6 +311,12 @@ function addLog(entry) {
   renderLog();
 }
 
+function getLogIconHtml(pokemonId) {
+  const info = INSTANCE_INFO[pokemonId];
+  if (!info) return "";
+  return `<img class="log-pokemon-icon" src="${info.image}" alt="${info.koreanName}" />`;
+}
+
 function renderLog() {
   const logEl = document.getElementById("log-list");
   if (logEntries.length === 0) {
@@ -281,7 +329,10 @@ function renderLog() {
       (entry) => `
       <li>
         <div class="log-item-head">
-          <span class="title">${entry.title}</span>
+          <div class="log-item-title-row">
+            ${getLogIconHtml(entry.pokemonId)}
+            <span class="title">${entry.title}</span>
+          </div>
           <span class="time">${entry.time.toLocaleTimeString("ko-KR")}</span>
         </div>
         <p class="log-item-body">${entry.message}</p>
@@ -343,6 +394,7 @@ async function runDemoAll() {
     renderMonsterPanel();
     addLog({
       type: "info",
+      pokemonId: step.pokemonId,
       title: step.title,
       message: step.message,
     });
@@ -380,12 +432,16 @@ function closeManualModal() {
   modal.setAttribute("aria-hidden", "true");
 }
 
+function bustLogoCache(id) {
+  const logo = document.getElementById(id);
+  if (!logo) return;
+  const src = logo.getAttribute("src").split("?")[0];
+  logo.src = `${src}?v=${Date.now()}`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  const logo = document.getElementById("ssu-brand-logo");
-  if (logo) {
-    const src = logo.getAttribute("src").split("?")[0];
-    logo.src = `${src}?v=${Date.now()}`;
-  }
+  bustLogoCache("ssu-brand-logo");
+  bustLogoCache("ssu-page-logo");
 
   spawnMonster();
   renderMonsterPanel();
