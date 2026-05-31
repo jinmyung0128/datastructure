@@ -66,18 +66,24 @@ function renderDiagram() {
       const koreanLabel = instanceInfo
         ? `<span class="card-korean-name"> (${instanceInfo.koreanName})</span>`
         : "";
+      const isInteractive = meta.kind === "instance";
 
-      const card = document.createElement("button");
-      card.type = "button";
+      const card = document.createElement(isInteractive ? "button" : "div");
+      if (isInteractive) {
+        card.type = "button";
+      }
       card.dataset.id = node.id;
       card.className = [
         "class-card",
         themeClass,
         isInstanceRow ? "compact" : "normal",
+        isInteractive ? "" : "class-card--static",
         isSelected ? "is-selected" : "",
       ]
         .filter(Boolean)
         .join(" ");
+
+      const hintHtml = isInteractive ? `<span class="hint">클릭 → attack()</span>` : "";
 
       card.innerHTML = `
         <span class="badge">${meta.badge}</span>
@@ -86,10 +92,12 @@ function renderDiagram() {
           <h3>${meta.label}${koreanLabel}</h3>
         </div>
         <p class="desc">${meta.description}</p>
-        <span class="hint">클릭 → attack()</span>
+        ${hintHtml}
       `;
 
-      card.addEventListener("click", () => handleNodeClick(node.id));
+      if (isInteractive) {
+        card.addEventListener("click", () => handleNodeClick(node.id));
+      }
       rowEl.appendChild(card);
     });
 
@@ -111,33 +119,19 @@ function renderDiagram() {
 }
 
 function handleNodeClick(id) {
+  const meta = getMeta(id);
+  if (meta.kind !== "instance") return;
+
   selectedId = id;
   renderDiagram();
 
   const entry = getEntry(id);
-  const meta = getMeta(id);
-
-  if (id === "PokemonADT") {
-    showAdtPanel();
-    addLog({
-      type: "info",
-      title: `${meta.label} 선택`,
-      message:
-        "추상 클래스입니다. 직접 인스턴스화할 수 없으며, attack()과 introduce()는 하위 클래스에서 구현됩니다.",
-    });
-    return;
-  }
-
   const pokemon = entry.instance;
   const intro = pokemon.introduce();
   const config = ATTACK_CONFIG[id] || { attackType: pokemon.ptype, damage: 30 };
   const result = pokemon.attack(config.attackType, config.damage);
-
-  let battleResult = null;
-  if (meta.kind === "instance") {
-    battleResult = resolveBattle(config.attackType, result);
-    renderMonsterPanel();
-  }
+  const battleResult = resolveBattle(config.attackType, result);
+  renderMonsterPanel();
 
   showInteractionPanel(pokemon, meta, intro, result, config, battleResult);
   addLog({
@@ -150,7 +144,7 @@ function handleNodeClick(id) {
       : result.success
         ? "attack"
         : "fail",
-    pokemonId: INSTANCE_INFO[id] ? id : undefined,
+    pokemonId: id,
     title: `${meta.label}.attack("${config.attackType}", ${config.damage})`,
     message: battleResult ? battleResult.message : result.message,
     damage: battleResult ? battleResult.damageDealt : result.damage,
@@ -198,8 +192,8 @@ function showAdtPanel() {
 
   document.getElementById("attack-result").innerHTML = `
     <div class="result-box result-box--info">
-      ADT는 인스턴스화할 수 없습니다. 아래 <strong>Pokemon</strong> 기본 클래스나
-      <strong>하위 인스턴스</strong>를 클릭하면 각각 오버라이드된 attack() 결과가 다르게 출력됩니다.
+      ADT는 인스턴스화할 수 없습니다. 아래 <strong>Instance</strong> 카드를 클릭하면
+      각각 오버라이드된 attack() 결과가 다르게 출력됩니다.
     </div>
   `;
 
@@ -208,7 +202,7 @@ function showAdtPanel() {
 }
 
 function showInteractionPanel(pokemon, meta, intro, result, config, battleResult = null) {
-  document.getElementById("panel-title").textContent = meta.label;
+  setPanelTitle(meta.label);
   document.getElementById("panel-subtitle").textContent = `${meta.badge} — 오버라이드된 attack() 호출`;
 
   document.getElementById("intro-result").innerHTML = `
@@ -285,6 +279,16 @@ function getLogIconHtml(pokemonId) {
   const info = INSTANCE_INFO[pokemonId];
   if (!info) return "";
   return `<img class="log-pokemon-icon" src="${info.image}" alt="${info.koreanName}" />`;
+}
+
+function setPanelTitle(label) {
+  const titleEl = document.getElementById("panel-title");
+  const info = INSTANCE_INFO[label];
+  if (info) {
+    titleEl.innerHTML = `<span class="panel-title-row">${getLogIconHtml(label)}<span>${label}</span></span>`;
+  } else {
+    titleEl.textContent = label;
+  }
 }
 
 function renderLog() {
