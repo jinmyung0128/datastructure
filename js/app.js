@@ -381,6 +381,12 @@ function closeManualModal() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const logo = document.getElementById("ssu-brand-logo");
+  if (logo) {
+    const src = logo.getAttribute("src").split("?")[0];
+    logo.src = `${src}?v=${Date.now()}`;
+  }
+
   spawnMonster();
   renderMonsterPanel();
   renderDiagram();
