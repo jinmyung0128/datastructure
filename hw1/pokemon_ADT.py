@@ -23,5 +23,5 @@ class PokemonADT(ABC):
         pass
 
     @abstractmethod
-    def attack(self):
+    def attack(self, attack_type, damage):
         pass
