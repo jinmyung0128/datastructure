@@ -71,31 +71,34 @@ a {
   position: relative;
   max-width: 1760px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 16px 24px 14px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  min-height: 64px;
+  min-height: 65px;
 }
 
 .ssu-brand {
   position: absolute;
   left: 24px;
+  top: 16px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  margin-right: 60px;
 }
 
+/* SSU 홈페이지 header#header>nav a.logo 와 동일: 209×42px */
 .ssu-brand-logo {
   display: block;
   width: 209px;
   height: 42px;
   margin-top: 7px;
-  object-fit: contain;
+  object-fit: cover;
   object-position: left center;
 }
 
 .ssu-page-title {
-  margin: 0;
+  margin: 13px 0 0;
   font-family: var(--ssu-font-en);
   font-size: 22px;
   font-weight: 700;
@@ -107,6 +110,7 @@ a {
 .ssu-header-actions {
   position: absolute;
   right: 24px;
+  top: 16px;
   display: flex;
   gap: 8px;
 }
