@@ -283,9 +283,17 @@ function showInteractionPanel(pokemon, meta, intro, result, config, battleResult
         <p class="mt-1 text-sm font-bold">${battleResult.message}</p>
         ${
           battleResult.defeated
-            ? `<p class="mt-1 text-xs">새 몬스터 ${currentMonster.name} (${getTypeInfo(currentMonster.ptype).label}, HP ${currentMonster.hp}) 등장!</p>`
+            ? `<p class="mt-1 text-xs">새 몬스터 ${currentMonster.name} (${getTypeInfo(currentMonster.ptype).label}, HP ${currentMonster.hp}) 등장!</p>${
+                battleResult.multiplier !== 1
+                  ? `<p class="mt-1 text-xs">${battleResult.effectivenessLabel} (기본 ${battleResult.baseDamage} → ${battleResult.damageDealt})</p>`
+                  : ""
+              }`
             : battleResult.battleSuccess && battleResult.damageDealt > 0
-              ? `<p class="mt-1 text-xs font-mono">-${battleResult.damageDealt} HP</p>`
+              ? `<p class="mt-1 text-xs font-mono">-${battleResult.damageDealt} HP${
+                  battleResult.multiplier !== 1
+                    ? ` (기본 ${battleResult.baseDamage} × ${battleResult.multiplier})`
+                    : ""
+                }</p>`
               : ""
         }
       </div>

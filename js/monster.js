@@ -8,6 +8,31 @@ const MONSTER_TYPES = [
 let monsterCounter = 0;
 let currentMonster = null;
 
+const TYPE_EFFECTIVENESS = {
+  fire: { grass: 1.5, water: 0.5 },
+  grass: { fire: 0.5 },
+  elec: { water: 1.5 },
+  water: { elec: 0.5, fire: 1.5 },
+};
+
+function getTypeMultiplier(attackType, monsterType) {
+  return TYPE_EFFECTIVENESS[attackType]?.[monsterType] ?? 1;
+}
+
+function getEffectivenessLabel(multiplier) {
+  if (multiplier > 1) return "효과가 뛰어난 공격! (×1.5)";
+  if (multiplier < 1) return "효과가 별로인 공격... (×0.5)";
+  return "";
+}
+
+function calcBattleDamage(baseDamage, attackType, monsterType) {
+  const multiplier = getTypeMultiplier(attackType, monsterType);
+  return {
+    multiplier,
+    damage: Math.max(1, Math.round(baseDamage * multiplier)),
+  };
+}
+
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -63,7 +88,14 @@ function resolveBattle(attackType, attackResult) {
     };
   }
 
-  monster.hp = Math.max(0, monster.hp - attackResult.damage);
+  const { multiplier, damage: finalDamage } = calcBattleDamage(
+    attackResult.damage,
+    attackType,
+    monster.ptype
+  );
+  const effectivenessLabel = getEffectivenessLabel(multiplier);
+
+  monster.hp = Math.max(0, monster.hp - finalDamage);
 
   if (monster.hp <= 0) {
     const defeatedMonster = { ...monster };
@@ -72,17 +104,25 @@ function resolveBattle(attackType, attackResult) {
       battleSuccess: true,
       defeated: true,
       message: "몬스터를 처치 했습니다!",
-      damageDealt: attackResult.damage,
+      damageDealt: finalDamage,
+      baseDamage: attackResult.damage,
+      multiplier,
+      effectivenessLabel,
       defeatedMonster,
       monster: currentMonster,
     };
   }
 
+  const effectText = effectivenessLabel ? ` ${effectivenessLabel}` : "";
+
   return {
     battleSuccess: true,
     defeated: false,
-    message: `${monster.name}에게 ${attackResult.damage} 데미지! (남은 HP: ${monster.hp}/${monster.maxHp})`,
-    damageDealt: attackResult.damage,
+    message: `${monster.name}에게 ${finalDamage} 데미지!${effectText} (남은 HP: ${monster.hp}/${monster.maxHp})`,
+    damageDealt: finalDamage,
+    baseDamage: attackResult.damage,
+    multiplier,
+    effectivenessLabel,
     monster,
   };
 }
