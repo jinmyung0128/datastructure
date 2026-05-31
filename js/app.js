@@ -82,7 +82,10 @@ function renderDiagram() {
 
   rows.forEach((rowNodes, rowIndex) => {
     const rowEl = document.createElement("div");
-    rowEl.className = "flex flex-wrap justify-center gap-4 md:gap-6";
+    const isInstanceRow = rowIndex === 2;
+    rowEl.className = isInstanceRow
+      ? "grid w-full grid-cols-4 gap-2"
+      : "flex justify-center gap-3";
 
     rowNodes.forEach((node) => {
       const meta = getMeta(node.id);
@@ -93,26 +96,27 @@ function renderDiagram() {
       card.type = "button";
       card.dataset.id = node.id;
       card.className = [
-        "group relative w-40 md:w-44 rounded-2xl border-2 p-4 text-left transition-all duration-200",
-        "hover:-translate-y-1 hover:shadow-lg focus:outline-none focus-visible:ring-4",
+        "group relative rounded-xl border-2 text-left transition-all duration-200",
+        "hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus-visible:ring-4",
+        isInstanceRow ? "min-w-0 p-2.5" : "w-44 p-3",
         colors.bg,
         colors.border,
         colors.text,
         colors.glow,
-        isSelected ? `ring-4 ${colors.ring} scale-105 shadow-xl` : "shadow-md",
+        isSelected ? `ring-4 ${colors.ring} scale-[1.02] shadow-xl` : "shadow-md",
       ].join(" ");
 
       card.innerHTML = `
-        <span class="inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${colors.badge}">
+        <span class="inline-block rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${colors.badge}">
           ${meta.badge}
         </span>
-        <div class="mt-2 flex items-center gap-2">
-          <span class="text-2xl">${meta.emoji || "◆"}</span>
-          <h3 class="text-lg font-bold leading-tight">${meta.label}</h3>
+        <div class="mt-1 flex items-center gap-1.5">
+          <span class="text-lg leading-none">${meta.emoji || "◆"}</span>
+          <h3 class="truncate text-sm font-bold leading-tight">${meta.label}</h3>
         </div>
-        <p class="mt-2 text-xs leading-relaxed opacity-80 line-clamp-3">${meta.description}</p>
-        <span class="mt-3 block text-[11px] font-medium text-indigo-600 group-hover:underline">
-          클릭하여 attack() 실행 →
+        <p class="mt-1 text-[10px] leading-snug opacity-80 line-clamp-2">${meta.description}</p>
+        <span class="mt-1.5 block text-[10px] font-medium text-indigo-600 group-hover:underline">
+          클릭 → attack()
         </span>
       `;
 
@@ -124,12 +128,12 @@ function renderDiagram() {
 
     if (rowIndex < rows.length - 1) {
       const connector = document.createElement("div");
-      connector.className = "flex justify-center py-2";
+      connector.className = "flex justify-center py-0.5";
       connector.innerHTML = `
         <div class="flex flex-col items-center text-slate-400">
-          <div class="h-6 w-px bg-slate-300"></div>
-          <span class="text-xs">extends / implements</span>
-          <div class="h-6 w-px bg-slate-300"></div>
+          <div class="h-3 w-px bg-slate-300"></div>
+          <span class="text-[10px]">extends / implements</span>
+          <div class="h-3 w-px bg-slate-300"></div>
         </div>
       `;
       container.appendChild(connector);
