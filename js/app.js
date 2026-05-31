@@ -33,32 +33,6 @@ const INSTANCE_INFO = {
 let selectedId = null;
 let logEntries = [];
 let demoRunning = false;
-let pokemonPopupTimer = null;
-
-function showPokemonImagePopup(imageSrc, altText) {
-  let overlay = document.getElementById("pokemon-image-popup");
-  if (!overlay) {
-    overlay = document.createElement("div");
-    overlay.id = "pokemon-image-popup";
-    overlay.className = "pokemon-image-popup";
-    overlay.innerHTML = '<img alt="" />';
-    document.body.appendChild(overlay);
-  }
-
-  const img = overlay.querySelector("img");
-  img.src = imageSrc;
-  img.alt = altText;
-
-  overlay.classList.add("is-visible");
-
-  if (pokemonPopupTimer) {
-    clearTimeout(pokemonPopupTimer);
-  }
-  pokemonPopupTimer = setTimeout(() => {
-    overlay.classList.remove("is-visible");
-    pokemonPopupTimer = null;
-  }, 500);
-}
 
 function getEntry(id) {
   return POKEMON_REGISTRY[id];
@@ -161,10 +135,6 @@ function handleNodeClick(id) {
 
   let battleResult = null;
   if (meta.kind === "instance") {
-    const instanceInfo = INSTANCE_INFO[id];
-    if (instanceInfo) {
-      showPokemonImagePopup(instanceInfo.image, instanceInfo.koreanName);
-    }
     battleResult = resolveBattle(config.attackType, result);
     renderMonsterPanel();
   }

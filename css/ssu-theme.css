@@ -404,34 +404,6 @@ a {
 .class-card--water .badge { background: #e8f4ff; color: #0066aa; }
 .class-card--grass .badge { background: #eaf7ea; color: #2d7a2d; }
 
-/* Pokemon image popup (Instance click) */
-.pokemon-image-popup {
-  position: fixed;
-  inset: 0;
-  z-index: 1500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(18, 42, 82, 0.55);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-}
-
-.pokemon-image-popup.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.pokemon-image-popup img {
-  max-width: min(360px, 82vw);
-  max-height: min(360px, 70vh);
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-}
-
 /* Output panel */
 .output-head {
   flex-shrink: 0;
