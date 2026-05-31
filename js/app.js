@@ -61,6 +61,13 @@ const COLOR_MAP = {
 let selectedId = null;
 let logEntries = [];
 
+const TYPE_COLOR_CLASS = {
+  yellow: "border-yellow-300 bg-yellow-50 text-yellow-900",
+  orange: "border-orange-300 bg-orange-50 text-orange-900",
+  blue: "border-blue-300 bg-blue-50 text-blue-900",
+  green: "border-green-300 bg-green-50 text-green-900",
+};
+
 function getEntry(id) {
   return POKEMON_REGISTRY[id];
 }
@@ -164,14 +171,63 @@ function handleNodeClick(id) {
   const config = ATTACK_CONFIG[id] || { attackType: pokemon.ptype, damage: 30 };
   const result = pokemon.attack(config.attackType, config.damage);
 
-  showInteractionPanel(pokemon, meta, intro, result, config);
+  let battleResult = null;
+  if (meta.kind === "instance") {
+    battleResult = resolveBattle(config.attackType, result);
+    renderMonsterPanel();
+  }
+
+  showInteractionPanel(pokemon, meta, intro, result, config, battleResult);
   addLog({
-    type: result.success ? "attack" : "fail",
+    type: battleResult
+      ? battleResult.defeated
+        ? "defeat"
+        : battleResult.battleSuccess
+          ? "attack"
+          : "fail"
+      : result.success
+        ? "attack"
+        : "fail",
     title: `${meta.label}.attack("${config.attackType}", ${config.damage})`,
-    message: result.message,
-    damage: result.damage,
+    message: battleResult ? battleResult.message : result.message,
+    damage: battleResult ? battleResult.damageDealt : result.damage,
     critical: result.critical,
   });
+}
+
+function renderMonsterPanel() {
+  const panel = document.getElementById("monster-panel");
+  if (!currentMonster) {
+    spawnMonster();
+  }
+
+  const monster = currentMonster;
+  const typeInfo = getTypeInfo(monster.ptype);
+  const hpPercent = Math.round((monster.hp / monster.maxHp) * 100);
+  const colorClass = TYPE_COLOR_CLASS[monster.color] || TYPE_COLOR_CLASS.yellow;
+
+  panel.innerHTML = `
+    <div class="flex items-center justify-between gap-2">
+      <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-500">야생 몬스터</p>
+      <span class="rounded-full px-2 py-0.5 text-[10px] font-semibold ${colorClass} border">
+        ${typeInfo.emoji} ${typeInfo.label}
+      </span>
+    </div>
+    <h4 class="mt-1 text-sm font-bold text-slate-800">${monster.name}</h4>
+    <div class="mt-2">
+      <div class="mb-1 flex justify-between text-[10px] text-slate-600">
+        <span>HP</span>
+        <span>${monster.hp} / ${monster.maxHp}</span>
+      </div>
+      <div class="h-2.5 overflow-hidden rounded-full bg-slate-200">
+        <div
+          class="h-full rounded-full bg-gradient-to-r from-red-500 to-rose-400 transition-all duration-300"
+          style="width: ${hpPercent}%"
+        ></div>
+      </div>
+    </div>
+    <p class="mt-2 text-[10px] text-slate-500">타입: ${monster.ptype} · Instance 클릭으로 공격</p>
+  `;
 }
 
 function showAdtPanel() {
@@ -196,7 +252,7 @@ function showAdtPanel() {
     "rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700";
 }
 
-function showInteractionPanel(pokemon, meta, intro, result, config) {
+function showInteractionPanel(pokemon, meta, intro, result, config, battleResult = null) {
   document.getElementById("panel-title").textContent = meta.label;
   document.getElementById("panel-subtitle").textContent = `${meta.badge} — 오버라이드된 attack() 호출`;
 
@@ -213,6 +269,29 @@ function showInteractionPanel(pokemon, meta, intro, result, config) {
       : "border-emerald-300 bg-emerald-50 text-emerald-900"
     : "border-red-300 bg-red-50 text-red-900";
 
+  let battleHtml = "";
+  if (battleResult) {
+    const battleClass = battleResult.defeated
+      ? "border-violet-400 bg-violet-50 text-violet-900"
+      : battleResult.battleSuccess
+        ? "border-emerald-400 bg-emerald-50 text-emerald-900"
+        : "border-red-400 bg-red-50 text-red-900";
+
+    battleHtml = `
+      <div class="mt-2 rounded-xl border-2 p-3 ${battleClass}">
+        <p class="text-[10px] font-semibold uppercase tracking-wide opacity-70">몬스터 전투 결과</p>
+        <p class="mt-1 text-sm font-bold">${battleResult.message}</p>
+        ${
+          battleResult.defeated
+            ? `<p class="mt-1 text-xs">새 몬스터 ${currentMonster.name} (${getTypeInfo(currentMonster.ptype).label}, HP ${currentMonster.hp}) 등장!</p>`
+            : battleResult.battleSuccess && battleResult.damageDealt > 0
+              ? `<p class="mt-1 text-xs font-mono">-${battleResult.damageDealt} HP</p>`
+              : ""
+        }
+      </div>
+    `;
+  }
+
   document.getElementById("attack-result").innerHTML = `
     <div class="rounded-xl border-2 p-4 ${damageClass}">
       <div class="flex items-center justify-between gap-2">
@@ -225,6 +304,7 @@ function showInteractionPanel(pokemon, meta, intro, result, config) {
       </div>
       <p class="mt-2 text-sm font-medium">${result.message}</p>
     </div>
+    ${battleHtml}
   `;
 
   document.getElementById("method-badge").textContent = meta.kind === "base" ? "Base Method" : "Overridden";
@@ -269,6 +349,8 @@ function runDemoAll() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  spawnMonster();
+  renderMonsterPanel();
   renderDiagram();
   showAdtPanel();
   document.getElementById("demo-btn").addEventListener("click", runDemoAll);
