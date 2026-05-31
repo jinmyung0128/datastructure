@@ -83,38 +83,14 @@ a {
   left: 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
-.ssu-brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  background: var(--ssu-navy);
-  color: #fff;
-  font-family: var(--ssu-font-en);
-  font-weight: 800;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  border-radius: var(--ssu-radius);
-}
-
-.ssu-brand-text {
-  font-family: var(--ssu-font-en);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ssu-navy);
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-}
-
-.ssu-brand-text span {
+.ssu-brand-logo {
   display: block;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--ssu-text-muted);
+  height: 42px;
+  width: auto;
+  max-width: 209px;
+  object-fit: contain;
 }
 
 .ssu-page-title {
