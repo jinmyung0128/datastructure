@@ -224,20 +224,20 @@ a {
   color: var(--ssu-text-sub);
 }
 
-/* 상속 구조 패널 UML 요약 — 다이어그램 대비 축소 */
+/* 상속 구조 패널 UML 요약 — 다이어그램 작은 글자(.desc)와 동일 크기 */
 .ssu-main > .ssu-panel:first-child .ssu-panel-foot {
-  padding: 4px 18px 6px;
+  padding: 10px 18px 14px;
 }
 
 .ssu-main > .ssu-panel:first-child .ssu-panel-foot h3 {
-  margin: 0 0 2px;
-  font-size: calc(18px * 0.3);
+  margin: 0 0 6px;
+  font-size: 13px;
 }
 
 .ssu-main > .ssu-panel:first-child .ssu-panel-foot ul {
-  gap: 2px 6px;
-  font-size: calc(17px * 0.3);
-  line-height: 1.2;
+  gap: 8px 16px;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 /* Buttons */
