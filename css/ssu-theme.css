@@ -47,18 +47,6 @@ a {
   text-decoration: none;
 }
 
-/* Top banner (SSU header banner style) */
-.ssu-top-bar {
-  flex-shrink: 0;
-  background: var(--ssu-navy);
-  color: #fff;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 8px 16px;
-  letter-spacing: -0.02em;
-}
-
 /* Header */
 .ssu-header {
   flex-shrink: 0;
