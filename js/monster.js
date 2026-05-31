@@ -60,6 +60,24 @@ function spawnMonster() {
   return currentMonster;
 }
 
+function spawnMonsterWithType(typeId, hp = 80) {
+  monsterCounter += 1;
+  const type = getTypeInfo(typeId);
+
+  currentMonster = {
+    id: monsterCounter,
+    name: `야생 몬스터 #${monsterCounter}`,
+    ptype: type.id,
+    typeLabel: type.label,
+    emoji: type.emoji,
+    color: type.color,
+    maxHp: hp,
+    hp,
+  };
+
+  return currentMonster;
+}
+
 function resolveBattle(attackType, attackResult) {
   if (!currentMonster) {
     spawnMonster();

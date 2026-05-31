@@ -60,6 +60,7 @@ const COLOR_MAP = {
 
 let selectedId = null;
 let logEntries = [];
+let demoRunning = false;
 
 const TYPE_COLOR_CLASS = {
   yellow: "border-yellow-300 bg-yellow-50 text-yellow-900",
@@ -324,7 +325,7 @@ function showInteractionPanel(pokemon, meta, intro, result, config, battleResult
 
 function addLog(entry) {
   logEntries.unshift({ ...entry, time: new Date() });
-  if (logEntries.length > 8) logEntries.pop();
+  if (logEntries.length > 12) logEntries.pop();
   renderLog();
 }
 
@@ -350,10 +351,81 @@ function renderLog() {
     .join("");
 }
 
-function runDemoAll() {
-  ["Pikachu", "Charmander", "Squirtle", "Bulbasaur"].forEach((id, index) => {
-    setTimeout(() => handleNodeClick(id), index * 400);
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function runDemoAll() {
+  if (demoRunning) return;
+
+  const demoBtn = document.getElementById("demo-btn");
+  demoRunning = true;
+  demoBtn.disabled = true;
+  demoBtn.classList.add("opacity-60", "cursor-not-allowed");
+  demoBtn.textContent = "데모 진행 중...";
+
+  const steps = [
+    {
+      pokemonId: "Bulbasaur",
+      monsterType: "grass",
+      title: "데모 1 · 같은 타입 공격",
+      message:
+        "풀 타입 몬스터 등장 → 이상해씨(풀) 공격. 같은 타입이므로 데미지가 들어가지 않습니다.",
+    },
+    {
+      pokemonId: "Charmander",
+      monsterType: "grass",
+      title: "데모 2 · 추가 피해 (×1.5)",
+      message:
+        "풀 타입 몬스터 등장 → 파이리(불) 공격. 불은 풀에게 효과가 뛰어나 추가 데미지가 적용됩니다.",
+    },
+    {
+      pokemonId: "Bulbasaur",
+      monsterType: "fire",
+      title: "데모 3 · 감소 피해 (×0.5)",
+      message:
+        "불 타입 몬스터 등장 → 이상해씨(풀) 공격. 풀은 불에게 효과가 별로라 데미지가 감소합니다.",
+    },
+  ];
+
+  logEntries = [];
+  renderLog();
+  addLog({
+    type: "info",
+    title: "전체 데모 시작",
+    message: "같은 타입 / 추가 피해 / 감소 피해 순서로 시연합니다.",
   });
+
+  await sleep(900);
+
+  for (const step of steps) {
+    spawnMonsterWithType(step.monsterType, 80);
+    renderMonsterPanel();
+    addLog({
+      type: "info",
+      title: step.title,
+      message: step.message,
+    });
+    await sleep(700);
+    handleNodeClick(step.pokemonId);
+    await sleep(2800);
+  }
+
+  addLog({
+    type: "info",
+    title: "데모 완료",
+    message: "일반 플레이를 위해 새로운 랜덤 몬스터를 소환했습니다.",
+  });
+  spawnMonster();
+  renderMonsterPanel();
+  selectedId = null;
+  renderDiagram();
+  showAdtPanel();
+
+  demoRunning = false;
+  demoBtn.disabled = false;
+  demoBtn.classList.remove("opacity-60", "cursor-not-allowed");
+  demoBtn.textContent = "전체 데모 실행";
 }
 
 function openManualModal() {
