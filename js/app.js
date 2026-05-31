@@ -356,6 +356,20 @@ function runDemoAll() {
   });
 }
 
+function openManualModal() {
+  const modal = document.getElementById("manual-modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeManualModal() {
+  const modal = document.getElementById("manual-modal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+  modal.setAttribute("aria-hidden", "true");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   spawnMonster();
   renderMonsterPanel();
@@ -365,5 +379,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("clear-btn").addEventListener("click", () => {
     logEntries = [];
     renderLog();
+  });
+
+  document.getElementById("manual-open-btn").addEventListener("click", openManualModal);
+  document.getElementById("manual-close-btn").addEventListener("click", closeManualModal);
+  document.getElementById("manual-confirm-btn").addEventListener("click", closeManualModal);
+  document.getElementById("manual-modal").addEventListener("click", (e) => {
+    if (e.target.id === "manual-modal") closeManualModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeManualModal();
   });
 });

@@ -29,7 +29,14 @@
   </head>
   <body class="h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100">
     <div class="mx-auto flex h-full max-w-[1760px] flex-col px-6 py-4">
-      <header class="mb-3 shrink-0 text-center">
+      <header class="relative mb-3 shrink-0 text-center">
+        <button
+          id="manual-open-btn"
+          type="button"
+          class="absolute right-0 top-0 rounded-full border border-indigo-400/50 bg-indigo-600/80 px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition hover:bg-indigo-500"
+        >
+          📖 사용 설명서
+        </button>
         <p class="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-indigo-300">
           2026-1 자료구조 · 과제 2
         </p>
@@ -42,64 +49,6 @@
           으로 야생 몬스터와 전투합니다. <strong class="text-white">같은 타입 공격은 실패</strong>, 다른 타입은 성공합니다.
         </p>
       </header>
-
-      <section
-        class="mb-2 shrink-0 rounded-xl border border-indigo-400/40 bg-indigo-950/60 px-4 py-2.5 text-left shadow-lg shadow-indigo-900/20"
-        aria-label="사용 설명서"
-      >
-        <h2 class="text-sm font-bold text-indigo-200">📖 사용 설명서</h2>
-        <div class="mt-2 grid gap-3 md:grid-cols-2">
-          <div>
-            <h3 class="text-[11px] font-semibold text-white">플레이 방법</h3>
-            <ul class="mt-1 space-y-0.5 text-[11px] leading-relaxed text-slate-300">
-              <li>
-                · 하단 <strong class="text-white">Instance</strong> 카드
-                (<strong>피카츄 · 파이리 · 꼬부기 · 이상해씨</strong>)를 클릭하면
-                각 포켓몬의 <code class="rounded bg-white/10 px-1">attack()</code>이 실행되어
-                <strong class="text-white">야생 몬스터</strong>를 공격합니다.
-              </li>
-              <li>
-                · 몬스터는 <strong class="text-white">전기 · 불 · 물 · 풀</strong> 타입 중 하나와
-                <strong class="text-white">HP 50~100</strong>이 랜덤으로 부여됩니다.
-              </li>
-              <li>
-                · <strong class="text-rose-300">같은 타입</strong>으로 공격하면 실패하며 HP가 줄지 않습니다.
-              </li>
-              <li>
-                · 몬스터 HP가 0이 되면 <strong class="text-violet-300">「몬스터를 처치 했습니다!」</strong>
-                메시지와 함께 새 몬스터가 등장합니다.
-              </li>
-              <li>· <strong class="text-white">전체 데모 실행</strong> 버튼으로 4종 Instance 공격을 연속 시연할 수 있습니다.</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-[11px] font-semibold text-white">타입 상성 (데미지 보정)</h3>
-            <p class="mt-1 text-[10px] text-slate-400">타입이 다를 때만 공격 성공 · 보정은 최종 데미지에 적용</p>
-            <div class="mt-1.5 grid grid-cols-2 gap-1.5 text-[10px]">
-              <div class="rounded-lg border border-emerald-500/40 bg-emerald-950/40 px-2 py-1.5">
-                <p class="font-semibold text-emerald-300">×1.5 추가 피해</p>
-                <ul class="mt-0.5 space-y-0.5 text-slate-300">
-                  <li>🔥 불 → 🌿 풀</li>
-                  <li>⚡ 전기 → 💧 물</li>
-                  <li>💧 물 → 🔥 불</li>
-                </ul>
-              </div>
-              <div class="rounded-lg border border-amber-500/40 bg-amber-950/40 px-2 py-1.5">
-                <p class="font-semibold text-amber-300">×0.5 감소 피해</p>
-                <ul class="mt-0.5 space-y-0.5 text-slate-300">
-                  <li>🌿 풀 → 🔥 불</li>
-                  <li>💧 물 → ⚡ 전기</li>
-                  <li>🔥 불 → 💧 물</li>
-                </ul>
-              </div>
-            </div>
-            <p class="mt-1.5 text-[10px] text-slate-400">
-              그 외 타입 조합(상성 표에 없는 경우)은 ×1.0 · Instance별 기본 데미지는
-              피카츄 50 / 파이리 40 / 꼬부기 45 / 이상해씨 35
-            </p>
-          </div>
-        </div>
-      </section>
 
       <div class="grid min-h-0 flex-1 gap-4 lg:grid-cols-5">
         <section
@@ -174,6 +123,87 @@
       <footer class="mt-2 shrink-0 text-center text-[10px] text-slate-400">
         hw1 Python OOP 설계 기반 · HTML + Tailwind CSS + Vanilla JS
       </footer>
+    </div>
+
+    <div
+      id="manual-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="manual-title"
+    >
+      <div class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-indigo-300/30 bg-slate-900 p-5 shadow-2xl shadow-indigo-900/50">
+        <button
+          id="manual-close-btn"
+          type="button"
+          class="absolute right-3 top-3 rounded-full bg-slate-800 px-2.5 py-1 text-xs text-slate-300 transition hover:bg-slate-700 hover:text-white"
+          aria-label="닫기"
+        >
+          ✕
+        </button>
+        <h2 id="manual-title" class="pr-8 text-lg font-bold text-indigo-200">📖 사용 설명서</h2>
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+          <div>
+            <h3 class="text-sm font-semibold text-white">플레이 방법</h3>
+            <ul class="mt-2 space-y-1.5 text-xs leading-relaxed text-slate-300">
+              <li>
+                · 하단 <strong class="text-white">Instance</strong> 카드
+                (<strong>피카츄 · 파이리 · 꼬부기 · 이상해씨</strong>)를 클릭하면
+                각 포켓몬의 <code class="rounded bg-white/10 px-1">attack()</code>이 실행되어
+                <strong class="text-white">야생 몬스터</strong>를 공격합니다.
+              </li>
+              <li>
+                · 몬스터는 <strong class="text-white">전기 · 불 · 물 · 풀</strong> 타입 중 하나와
+                <strong class="text-white">HP 50~100</strong>이 랜덤으로 부여됩니다.
+              </li>
+              <li>
+                · <strong class="text-rose-300">같은 타입</strong>으로 공격하면 실패하며 HP가 줄지 않습니다.
+              </li>
+              <li>
+                · 몬스터 HP가 0이 되면 <strong class="text-violet-300">「몬스터를 처치 했습니다!」</strong>
+                메시지와 함께 새 몬스터가 등장합니다.
+              </li>
+              <li>· <strong class="text-white">전체 데모 실행</strong> 버튼으로 4종 Instance 공격을 연속 시연할 수 있습니다.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">타입 상성 (데미지 보정)</h3>
+            <p class="mt-2 text-xs text-slate-400">타입이 다를 때만 공격 성공 · 보정은 최종 데미지에 적용</p>
+            <div class="mt-2 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
+              <div class="rounded-lg border border-emerald-500/40 bg-emerald-950/40 px-3 py-2">
+                <p class="font-semibold text-emerald-300">×1.5 추가 피해</p>
+                <ul class="mt-1 space-y-0.5 text-slate-300">
+                  <li>🔥 불 → 🌿 풀</li>
+                  <li>⚡ 전기 → 💧 물</li>
+                  <li>💧 물 → 🔥 불</li>
+                </ul>
+              </div>
+              <div class="rounded-lg border border-amber-500/40 bg-amber-950/40 px-3 py-2">
+                <p class="font-semibold text-amber-300">×0.5 감소 피해</p>
+                <ul class="mt-1 space-y-0.5 text-slate-300">
+                  <li>🌿 풀 → 🔥 불</li>
+                  <li>💧 물 → ⚡ 전기</li>
+                  <li>🔥 불 → 💧 물</li>
+                </ul>
+              </div>
+            </div>
+            <p class="mt-2 text-xs text-slate-400">
+              그 외 타입 조합(상성 표에 없는 경우)은 ×1.0 · Instance별 기본 데미지는
+              피카츄 50 / 파이리 40 / 꼬부기 45 / 이상해씨 35
+            </p>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <button
+            id="manual-confirm-btn"
+            type="button"
+            class="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+          >
+            확인
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="js/pokemon.js"></script>
