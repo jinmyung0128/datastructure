@@ -224,6 +224,15 @@ a {
   color: var(--ssu-text-sub);
 }
 
+/* 상속 구조 패널 UML 요약 글자 확대 */
+.ssu-main > .ssu-panel:first-child .ssu-panel-foot h3 {
+  font-size: 18px;
+}
+
+.ssu-main > .ssu-panel:first-child .ssu-panel-foot ul {
+  font-size: 17px;
+}
+
 /* Buttons */
 .ssu-btn {
   appearance: none;
@@ -303,23 +312,23 @@ a {
   flex-direction: column;
   align-items: center;
   color: var(--ssu-text-muted);
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .diagram-connector-inner .line {
   width: 1px;
-  height: 10px;
+  height: 12px;
   background: var(--ssu-border);
 }
 
-/* Class cards */
+/* Class cards — 상속 구조 다이어그램 */
 .class-card {
   position: relative;
   text-align: left;
   border: 1px solid var(--ssu-border);
   border-radius: var(--ssu-radius);
   background: var(--ssu-white);
-  padding: 10px 12px;
+  padding: 14px 16px;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
@@ -340,17 +349,17 @@ a {
 
 .class-card.compact {
   min-width: 0;
-  padding: 8px 10px;
+  padding: 12px 14px;
 }
 
 .class-card.normal {
-  width: 170px;
+  width: 200px;
 }
 
 .class-card .badge {
   display: inline-block;
-  padding: 2px 8px;
-  font-size: 9px;
+  padding: 3px 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -360,18 +369,18 @@ a {
 .class-card .card-title-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 6px;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .class-card .emoji {
-  font-size: 18px;
+  font-size: 27px;
   line-height: 1;
 }
 
 .class-card h3 {
   margin: 0;
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -379,8 +388,8 @@ a {
 }
 
 .class-card .desc {
-  margin: 6px 0 0;
-  font-size: 10px;
+  margin: 8px 0 0;
+  font-size: 15px;
   color: var(--ssu-text-sub);
   line-height: 1.4;
   display: -webkit-box;
@@ -391,8 +400,8 @@ a {
 
 .class-card .hint {
   display: block;
-  margin-top: 6px;
-  font-size: 10px;
+  margin-top: 8px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--ssu-cyan);
 }
