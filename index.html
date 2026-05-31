@@ -3,76 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>자료구조 HW2 — OOP 다형성 시각화</title>
+    <title>pokemon game</title>
     <meta
       name="description"
       content="Pokemon ADT 상속 구조와 attack() 다형성을 시각화하는 인터랙티브 웹앱"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ["Pretendard", "Segoe UI", "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
-    <link
-      rel="stylesheet"
-      as="style"
-      crossorigin
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
-    />
+    <link rel="stylesheet" href="css/ssu-theme.css" />
   </head>
-  <body class="h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100">
-    <div class="mx-auto flex h-full max-w-[1760px] flex-col px-6 py-4">
-      <header class="relative mb-3 shrink-0 text-center">
-        <button
-          id="manual-open-btn"
-          type="button"
-          class="absolute right-0 top-0 rounded-full border border-indigo-400/50 bg-indigo-600/80 px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition hover:bg-indigo-500"
-        >
-          📖 사용 설명서
-        </button>
-        <p class="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-indigo-300">
-          2026-1 자료구조 · 과제 2
-        </p>
-        <h1 class="text-2xl font-black tracking-tight">
-          OOP 상속 구조 &amp; 다형성 인터랙션
-        </h1>
-        <p class="mx-auto mt-1 max-w-3xl text-xs leading-relaxed text-slate-300">
-          과제 1의 <strong class="text-white">PokemonADT → Pokemon → Instances</strong> 설계를
-          웹에서 시각화합니다. Instance를 클릭하면 오버라이드된 <code class="rounded bg-white/10 px-1">attack()</code>
-          으로 야생 몬스터와 전투합니다. <strong class="text-white">같은 타입 공격은 실패</strong>, 다른 타입은 성공합니다.
-        </p>
+  <body>
+    <div class="ssu-app">
+      <div class="ssu-top-bar">Truth and Service — Soongsil University Style UI</div>
+
+      <header class="ssu-header">
+        <div class="ssu-header-inner">
+          <div class="ssu-brand">
+            <span class="ssu-brand-mark">SSU</span>
+            <span class="ssu-brand-text">
+              SOONGSIL
+              <span>UNIVERSITY</span>
+            </span>
+          </div>
+          <h1 class="ssu-page-title">pokemon game</h1>
+          <div class="ssu-header-actions">
+            <button id="manual-open-btn" type="button" class="ssu-btn ssu-btn-outline">
+              사용 설명서
+            </button>
+          </div>
+        </div>
       </header>
 
-      <div class="grid min-h-0 flex-1 gap-4 lg:grid-cols-5">
-        <section
-          class="lg:col-span-3 flex min-h-0 flex-col rounded-2xl border border-white/10 bg-white/95 p-4 shadow-2xl shadow-indigo-900/30"
-        >
-          <div class="mb-2 flex shrink-0 flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 class="text-lg font-bold text-slate-900">상속 구조 (Class Hierarchy)</h2>
-              <p class="text-xs text-slate-500">Ch.2 OOP — ADT · Base Class · Instances</p>
+      <main class="ssu-main">
+        <section class="ssu-panel">
+          <div class="ssu-panel-head">
+            <div class="ssu-panel-head-left">
+              <h2>상속 구조 (Class Hierarchy)</h2>
+              <p>Ch.2 OOP — ADT · Base Class · Instances</p>
             </div>
-            <button
-              id="demo-btn"
-              type="button"
-              class="rounded-full bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-indigo-500"
-            >
+            <button id="demo-btn" type="button" class="ssu-btn ssu-btn-primary">
               전체 데모 실행
             </button>
           </div>
-
-          <div id="diagram" class="min-h-0 flex-1 space-y-0"></div>
-
-          <div class="mt-2 shrink-0 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <h3 class="text-xs font-bold text-slate-700">UML 관계 요약</h3>
-            <ul class="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-[11px] text-slate-600">
+          <div class="ssu-panel-body">
+            <div id="diagram"></div>
+          </div>
+          <div class="ssu-panel-foot">
+            <h3>UML 관계 요약</h3>
+            <ul>
               <li><strong>PokemonADT</strong> «abstract» — introduce(), attack()</li>
               <li><strong>Pokemon</strong> implements PokemonADT</li>
               <li><strong>Instances</strong> extends Pokemon — attack() 오버라이드</li>
@@ -80,128 +56,109 @@
           </div>
         </section>
 
-        <section
-          class="lg:col-span-2 flex min-h-0 flex-col gap-3 overflow-hidden rounded-2xl border border-white/10 bg-white/95 p-4 shadow-2xl shadow-indigo-900/30"
-        >
-          <div class="shrink-0">
-            <div class="flex items-center justify-between gap-2">
-              <h2 class="text-lg font-bold text-slate-900">다형성 출력</h2>
-              <span id="method-badge" class="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-semibold text-slate-700">
-                Abstract
-              </span>
+        <section class="ssu-panel">
+          <div class="ssu-panel-body">
+            <div class="output-head">
+              <div class="output-head-top">
+                <h2>다형성 출력</h2>
+                <span id="method-badge" class="ssu-badge ssu-badge--abstract">Abstract</span>
+              </div>
+              <p id="panel-subtitle" class="output-subtitle">노드를 클릭하여 메서드를 실행하세요</p>
+              <h3 id="panel-title">PokemonADT</h3>
             </div>
-            <p id="panel-subtitle" class="mt-0.5 text-xs text-slate-500">
-              노드를 클릭하여 메서드를 실행하세요
-            </p>
-            <h3 id="panel-title" class="mt-1 text-xl font-black text-indigo-700">PokemonADT</h3>
-          </div>
 
-          <div id="monster-panel" class="shrink-0 rounded-xl border-2 border-slate-200 bg-slate-50 p-3"></div>
+            <div id="monster-panel" class="monster-panel output-block"></div>
 
-          <div class="shrink-0">
-            <p class="mb-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">introduce()</p>
-            <div id="intro-result" class="text-sm text-slate-700"></div>
-          </div>
-
-          <div class="shrink-0">
-            <p class="mb-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">attack()</p>
-            <div id="attack-result"></div>
-          </div>
-
-          <div class="mt-auto min-h-0 flex flex-1 flex-col rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <div class="mb-2 flex shrink-0 items-center justify-between">
-              <h3 class="text-xs font-bold text-slate-700">실행 로그</h3>
-              <button id="clear-btn" type="button" class="text-[10px] text-slate-500 hover:text-slate-700">
-                지우기
-              </button>
+            <div class="output-block">
+              <p class="field-label">introduce()</p>
+              <div id="intro-result"></div>
             </div>
-            <ul id="log-list" class="min-h-0 flex-1 space-y-1.5 overflow-y-auto"></ul>
+
+            <div class="output-block">
+              <p class="field-label">attack()</p>
+              <div id="attack-result"></div>
+            </div>
+
+            <div class="log-section">
+              <div class="log-head">
+                <h3>실행 로그</h3>
+                <button id="clear-btn" type="button" class="ssu-btn ssu-btn-ghost">지우기</button>
+              </div>
+              <ul id="log-list"></ul>
+            </div>
           </div>
         </section>
-      </div>
+      </main>
 
-      <footer class="mt-2 shrink-0 text-center text-[10px] text-slate-400">
-        hw1 Python OOP 설계 기반 · HTML + Tailwind CSS + Vanilla JS
+      <footer class="ssu-footer">
+        <strong>숭실대학교</strong> UI 스타일 기반 · Pokemon OOP 설계 · HTML + CSS + Vanilla JS
       </footer>
     </div>
 
     <div
       id="manual-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
+      class="ssu-modal"
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
       aria-labelledby="manual-title"
     >
-      <div class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-indigo-300/30 bg-slate-900 p-5 shadow-2xl shadow-indigo-900/50">
-        <button
-          id="manual-close-btn"
-          type="button"
-          class="absolute right-3 top-3 rounded-full bg-slate-800 px-2.5 py-1 text-xs text-slate-300 transition hover:bg-slate-700 hover:text-white"
-          aria-label="닫기"
-        >
-          ✕
-        </button>
-        <h2 id="manual-title" class="pr-8 text-lg font-bold text-indigo-200">📖 사용 설명서</h2>
-        <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="ssu-modal-content">
+        <button id="manual-close-btn" type="button" class="ssu-modal-close" aria-label="닫기">✕</button>
+        <div class="ssu-modal-head">
+          <h2 id="manual-title">사용 설명서</h2>
+        </div>
+        <div class="ssu-modal-body">
           <div>
-            <h3 class="text-sm font-semibold text-white">플레이 방법</h3>
-            <ul class="mt-2 space-y-1.5 text-xs leading-relaxed text-slate-300">
+            <h3>플레이 방법</h3>
+            <ul>
               <li>
-                · 하단 <strong class="text-white">Instance</strong> 카드
+                · 하단 <strong>Instance</strong> 카드
                 (<strong>피카츄 · 파이리 · 꼬부기 · 이상해씨</strong>)를 클릭하면
-                각 포켓몬의 <code class="rounded bg-white/10 px-1">attack()</code>이 실행되어
-                <strong class="text-white">야생 몬스터</strong>를 공격합니다.
+                각 포켓몬의 <code>attack()</code>이 실행되어
+                <strong>야생 몬스터</strong>를 공격합니다.
               </li>
               <li>
-                · 몬스터는 <strong class="text-white">전기 · 불 · 물 · 풀</strong> 타입 중 하나와
-                <strong class="text-white">HP 50~100</strong>이 랜덤으로 부여됩니다.
+                · 몬스터는 <strong>전기 · 불 · 물 · 풀</strong> 타입 중 하나와
+                <strong>HP 50~100</strong>이 랜덤으로 부여됩니다.
               </li>
+              <li>· <strong>같은 타입</strong>으로 공격하면 실패하며 HP가 줄지 않습니다.</li>
               <li>
-                · <strong class="text-rose-300">같은 타입</strong>으로 공격하면 실패하며 HP가 줄지 않습니다.
-              </li>
-              <li>
-                · 몬스터 HP가 0이 되면 <strong class="text-violet-300">「몬스터를 처치 했습니다!」</strong>
+                · 몬스터 HP가 0이 되면 <strong>「몬스터를 처치 했습니다!」</strong>
                 메시지와 함께 새 몬스터가 등장합니다.
               </li>
-              <li>· <strong class="text-white">전체 데모 실행</strong> 버튼으로 4종 Instance 공격을 연속 시연할 수 있습니다.</li>
+              <li>· <strong>전체 데모 실행</strong> 버튼으로 3가지 상성 시연을 볼 수 있습니다.</li>
             </ul>
           </div>
           <div>
-            <h3 class="text-sm font-semibold text-white">타입 상성 (데미지 보정)</h3>
-            <p class="mt-2 text-xs text-slate-400">타입이 다를 때만 공격 성공 · 보정은 최종 데미지에 적용</p>
-            <div class="mt-2 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
-              <div class="rounded-lg border border-emerald-500/40 bg-emerald-950/40 px-3 py-2">
-                <p class="font-semibold text-emerald-300">×1.5 추가 피해</p>
-                <ul class="mt-1 space-y-0.5 text-slate-300">
+            <h3>타입 상성 (데미지 보정)</h3>
+            <p class="ssu-modal-note">타입이 다를 때만 공격 성공 · 보정은 최종 데미지에 적용</p>
+            <div class="type-chart">
+              <div class="type-chart-box type-chart-box--up">
+                <strong>×1.5 추가 피해</strong>
+                <ul>
                   <li>🔥 불 → 🌿 풀</li>
                   <li>⚡ 전기 → 💧 물</li>
                   <li>💧 물 → 🔥 불</li>
                 </ul>
               </div>
-              <div class="rounded-lg border border-amber-500/40 bg-amber-950/40 px-3 py-2">
-                <p class="font-semibold text-amber-300">×0.5 감소 피해</p>
-                <ul class="mt-1 space-y-0.5 text-slate-300">
+              <div class="type-chart-box type-chart-box--down">
+                <strong>×0.5 감소 피해</strong>
+                <ul>
                   <li>🌿 풀 → 🔥 불</li>
                   <li>💧 물 → ⚡ 전기</li>
                   <li>🔥 불 → 💧 물</li>
                 </ul>
               </div>
             </div>
-            <p class="mt-2 text-xs text-slate-400">
+            <p class="ssu-modal-note">
               그 외 타입 조합(상성 표에 없는 경우)은 ×1.0 · Instance별 기본 데미지는
               피카츄 50 / 파이리 40 / 꼬부기 45 / 이상해씨 35
             </p>
           </div>
         </div>
-        <div class="mt-4 text-center">
-          <button
-            id="manual-confirm-btn"
-            type="button"
-            class="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
-          >
-            확인
-          </button>
+        <div class="ssu-modal-foot">
+          <button id="manual-confirm-btn" type="button" class="ssu-btn ssu-btn-primary">확인</button>
         </div>
       </div>
     </div>
