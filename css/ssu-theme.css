@@ -75,7 +75,7 @@ a {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  min-height: 65px;
+  min-height: 90px;
 }
 
 .ssu-brand {
@@ -87,12 +87,12 @@ a {
   margin-right: 60px;
 }
 
-/* SSU 홈페이지 header#header>nav a.logo 와 동일: 209×42px */
+/* SSU 홈페이지 logo 대비 ×1.5 */
 .ssu-brand-logo {
   display: block;
-  width: 209px;
-  height: 42px;
-  margin-top: 7px;
+  width: 314px;
+  height: 63px;
+  margin-top: 11px;
   object-fit: cover;
   object-position: left center;
 }
